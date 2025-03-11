@@ -22,7 +22,26 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todos os usuários' })
-  @ApiResponse({ status: 200, description: 'Lista de usuários retornada' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuários retornada',
+    example: {
+      status: 200,
+      message: 'User list',
+      data: [
+        {
+          id: '69c51b00-40bc-4195-a7b2-7052de8ec260',
+          name: 'John Doe',
+          email: 'john@email.com',
+        },
+        {
+          id: '112233-40bc-4195-a7b2-7052de8ec260',
+          name: 'Mary Doe',
+          email: 'mary@email.com',
+        },
+      ],
+    },
+  })
   findAll(): Promise<any> {
     return this.service.findAll();
   }
