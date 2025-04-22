@@ -1,5 +1,8 @@
 import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PageMetaDto } from 'src/shared/pagination/page-meta.dto';
+import { PageOptionsDto } from 'src/shared/pagination/page-options.dto';
+import { PageDto } from 'src/shared/pagination/page.dto';
 import { Repository } from 'typeorm';
 import { UserDto } from './user.dto';
 import { UserEntity } from './user.entity';
@@ -31,13 +34,25 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    return await this.create({ id, ...userDto });
+    userDto.id = id;
+
+    return await this.create(userDto);
   }
 
-  async findAll(): Promise<any> {
-    const userEntities = await this.repository.find();
+  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<UserDto>> {
+    const queryBuilder = this.repository.createQueryBuilder('user');
 
-    return UserMapper.toResponse(HttpStatus.OK, 'Success', userEntities);
+    queryBuilder
+      .orderBy('user.name', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
+    return new PageDto(entities, pageMetaDto);
   }
 
   async findOne(id: string): Promise<any> {

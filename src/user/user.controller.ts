@@ -6,11 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UserDto } from './user.dto';
 import { UserEntity } from './user.entity';
 import { UserService } from './user.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PageOptionsDto } from 'src/shared/pagination/page-options.dto';
+import { PageDto } from 'src/shared/pagination/page.dto';
 
 @ApiTags('Users') // Tag para agrupar endpoints
 @Controller({
@@ -42,8 +45,8 @@ export class UserController {
       ],
     },
   })
-  findAll(): Promise<any> {
-    return this.service.findAll();
+  findAll(@Query() pageOptionsDto: PageOptionsDto): Promise<PageDto<UserDto>> {
+    return this.service.findAll(pageOptionsDto);
   }
 
   @Post()
