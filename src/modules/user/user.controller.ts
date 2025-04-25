@@ -15,7 +15,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { PageOptionsDto } from 'src/shared/pagination/page-options.dto';
 import { PageDto } from 'src/shared/pagination/page.dto';
 
-@ApiTags('Users') // Tag para agrupar endpoints
+@ApiTags('User') // Tag para agrupar endpoints
 @Controller({
   path: 'user',
   version: '1',
@@ -98,11 +98,10 @@ export class UserController {
   }
 
   @Get(':id')
-  @Get(':id')
   @ApiOperation({ summary: 'Buscar usuário por ID' })
   @ApiResponse({ status: 200, description: 'Usuário encontrado' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   find(@Param('id') id: string): Promise<any> {
-    return this.service.findOne(id);
+    return this.service.find(id);
   }
 }

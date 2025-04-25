@@ -55,7 +55,7 @@ export class UserService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async findOne(id: string): Promise<any> {
+  async find(id: string): Promise<any> {
     const userEntity = await this.repository.findOneBy({ id });
 
     if (!userEntity) {
