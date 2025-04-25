@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -40,8 +41,12 @@ export class ProfileController {
       ],
     },
   })
-  findAll(): Promise<any> {
-    return this.service.findAll();
+  async findAll(): Promise<any> {
+    return {
+      code: HttpStatus.OK,
+      message: 'Perfil list',
+      data: await this.service.findAll(),
+    };
   }
 
   @Post()
