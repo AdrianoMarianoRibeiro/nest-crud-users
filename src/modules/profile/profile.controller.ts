@@ -12,6 +12,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProfileDto } from './profile.dto';
 import { ProfileEntity } from './profile.entity';
 import { ProfileService } from './profile.service';
+import { ProfileMapper } from './profile.mapper';
 
 @ApiTags('Perfil') // Tag para agrupar endpoints
 @Controller({
@@ -42,11 +43,11 @@ export class ProfileController {
     },
   })
   async findAll(): Promise<any> {
-    return {
-      code: HttpStatus.OK,
-      message: 'Perfil list',
-      data: await this.service.findAll(),
-    };
+    return ProfileMapper.toResponse(
+      HttpStatus.OK,
+      'Perfil list',
+      await this.service.findAll(),
+    );
   }
 
   @Post()
@@ -102,7 +103,11 @@ export class ProfileController {
   @ApiOperation({ summary: 'Buscar perfil por ID' })
   @ApiResponse({ status: 200, description: 'perfil encontrado' })
   @ApiResponse({ status: 404, description: 'perfil não encontrado' })
-  find(@Param('id') id: string): Promise<any> {
-    return this.service.find(id);
+  async find(@Param('id') id: string): Promise<any> {
+    return ProfileMapper.toResponse(
+      HttpStatus.OK,
+      'Perfil list',
+      await this.service.find(id),
+    );
   }
 }
